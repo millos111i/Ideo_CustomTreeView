@@ -86,72 +86,71 @@ namespace Ideo.Controllers
             ViewBag.ParentID = new SelectList(db.Trees, "Id", "Text", treeView.ParentID);
             return View(treeView);
         }
-    }
 
-    // GET: TreeView/Edit/5
-    public ActionResult Edit(int? id)
-    {
-        if (id == null)
+        // GET: TreeView/Edit/5
+        public ActionResult Edit(int? id)
         {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            TreeView treeView = db.Trees.Find(id);
+            if (treeView == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.ParentID = new SelectList(db.Trees, "Id", "Text", treeView.ParentID); //TODO
+            return View(treeView);
         }
-        TreeView treeView = db.Trees.Find(id);
-        if (treeView == null)
-        {
-            return HttpNotFound();
-        }
-        ViewBag.ParentID = new SelectList(db.Trees, "Id", "Text", treeView.ParentID); //TODO
-        return View(treeView);
-    }
 
-    // POST: TreeView/Edit/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "Id,Text,ParentID")] TreeView treeView)
-    {
-        if (ModelState.IsValid)
+        // POST: TreeView/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,Text,ParentID")] TreeView treeView)
         {
-            db.Entry(treeView).State = EntityState.Modified;
+            if (ModelState.IsValid)
+            {
+                db.Entry(treeView).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.ParentID = new SelectList(db.Trees, "Id", "Text", treeView.ParentID);
+            return View(treeView);
+        }
+
+        // GET: TreeView/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            TreeView treeView = db.Trees.Find(id);
+            if (treeView == null)
+            {
+                return HttpNotFound();
+            }
+            return View(treeView);
+        }
+
+        // POST: TreeView/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            TreeView treeView = db.Trees.Find(id);
+            db.Trees.Remove(treeView);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        ViewBag.ParentID = new SelectList(db.Trees, "Id", "Text", treeView.ParentID);
-        return View(treeView);
-    }
 
-    // GET: TreeView/Delete/5
-    public ActionResult Delete(int? id)
-    {
-        if (id == null)
+        protected override void Dispose(bool disposing)
         {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        TreeView treeView = db.Trees.Find(id);
-        if (treeView == null)
-        {
-            return HttpNotFound();
-        }
-        return View(treeView);
     }
-
-    // POST: TreeView/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public ActionResult DeleteConfirmed(int id)
-    {
-        TreeView treeView = db.Trees.Find(id);
-        db.Trees.Remove(treeView);
-        db.SaveChanges();
-        return RedirectToAction("Index");
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            db.Dispose();
-        }
-        base.Dispose(disposing);
-    }
-}
 }
