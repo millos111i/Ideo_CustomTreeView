@@ -1,0 +1,32 @@
+﻿ul, #mainlist {
+    list-style-type: none;
+}
+
+#mainlist {
+    margin: 0;
+    padding: 0;
+}
+
+.caretView {
+    cursor: pointer;
+    user-select: none;
+}
+
+    .caretView::before {
+        content: "\25B6";
+        color: black;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+.caret-down::before {
+    transform: rotate(90deg);
+}
+
+.nested {
+    display: none;
+}
+
+.active {
+    display: block;
+}

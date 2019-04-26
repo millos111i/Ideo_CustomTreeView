@@ -11,7 +11,9 @@
             var list = tree.Children.Where(treeData => treeData.ParentID != null).ToList();
             if (list.Count > 0)
             {
-                @Html.DisplayFor(model => tree.Text)
+                <span class="caretView">
+                    @Html.DisplayFor(model => tree.Text)
+                </span>
                 <div class="btn-group" role="group" aria-label="...">
                     <button type="button" class="glyphicon glyphicon-plus"
                             onclick="location.href='@Url.Action("Create", "TreeView", new { id = tree.Id })'" />
@@ -22,7 +24,7 @@
                     <button type="button" class="glyphicon glyphicon-pencil"
                             onclick="location.href='@Url.Action("Edit", "TreeView", new { id = tree.Id })'" />
                 </div>
-                <ul>
+                <ul class="nested">
                     @foreach (var t in tree.Children.Where(tr => tr.ParentID != null))
                     {
                         @Show(t);
