@@ -159,9 +159,21 @@ namespace Ideo.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             TreeView treeView = db.Trees.Find(id);
-            db.Trees.Remove(treeView);
+            RemoveChildren(treeView);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        private void RemoveChildren(TreeView tree)
+        {
+            if (tree.Children.ToList().Count > 0)
+            {
+                foreach (TreeView t in tree.Children.ToList())
+                {
+                    RemoveChildren(t);
+                }
+            }
+            db.Trees.Remove(tree);
         }
 
         protected override void Dispose(bool disposing)
