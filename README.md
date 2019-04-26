@@ -4,4 +4,4 @@ Deployed on http://treeviewideo.azurewebsites.net
 
 Application is simple version of TreeView without using custom control.
 
-To create this app was used ASP.NET MVC and Entity Framework.
+Technology: ASP.NET MVC and Entity Framework.
