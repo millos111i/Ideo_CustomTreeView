@@ -99,7 +99,7 @@ namespace Ideo.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ParentID = new SelectList(db.Trees, "Id", "Text", treeView.ParentID); //TODO
+            ViewBag.ParentID = GetSelectListItems(treeView);
             return View(treeView);
         }
 
@@ -114,8 +114,28 @@ namespace Ideo.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ParentID = new SelectList(db.Trees, "Id", "Text", treeView.ParentID);
+            ViewBag.ParentID = GetSelectListItems(treeView);
             return View(treeView);
+        }
+
+        private SelectList GetSelectListItems(TreeView tree)
+        {
+            List<TreeView> trees = DeleteChildrenFromList(db.Trees.ToList(), tree);
+            if (trees.Contains(tree)) trees.Remove(tree);
+            return new SelectList(trees, "Id", "Text", tree.ParentID);
+        }
+
+        private List<TreeView> DeleteChildrenFromList(List<TreeView> treeList, TreeView tree)
+        {
+            foreach (TreeView t in tree.Children)
+            {
+                if (t.Children.Count > 0 && t.Id != tree.Id)
+                {
+                    treeList = DeleteChildrenFromList(treeList, t);
+                }
+                treeList.Remove(t);
+            }
+            return treeList;
         }
 
         // GET: TreeView/Delete/5
@@ -152,5 +172,6 @@ namespace Ideo.Controllers
             }
             base.Dispose(disposing);
         }
+
     }
 }
